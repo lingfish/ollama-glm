@@ -12,9 +12,16 @@ FROM docker.io/saladtechnologies/ollama:0.15.2
 # Ollama stores model weights in /root/.ollama
 COPY --from=downloader /root/.ollama /root/.ollama
 
+# Set environment variables to avoid interactive prompts during installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update the package list and install btop, nvtop, and terminfo
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y btop nvtop ncurses-term terminfo vim htop && \
+    apt-get clean
+
 # Salad-specific environment variables (often already in the base)
 #ENV OLLAMA_HOST="[::]:11434"
 
 #EXPOSE 11434
 # No need for a custom ENTRYPOINT if the base image already handles it
-
